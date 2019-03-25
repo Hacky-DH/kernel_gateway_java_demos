@@ -50,14 +50,42 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(String s) {
-        if (logger != null)
-            logger.println("received message " + s);
+        /*
+        received message demo:
+        {
+             "header": {
+                 "msg_id": "c000f1a1-bb26ede1ecdba37487fb377b",
+                 "msg_type": "stream",
+                 "username": "username",
+                 "session": "a95f2da9-e29374d1e061f5dec5021709",
+                 "date": "2019-03-25T08:46:21.954103Z",
+                 "version": "5.3"
+             },
+             "msg_id": "c000f1a1-bb26ede1ecdba37487fb377b",
+             "msg_type": "stream",
+             "parent_header": {
+                 "username": "",
+                 "version": "5.0",
+                 "msg_id": "24621720-d1f9-4a86-8483-5f0a42d7cffc",
+                 "msg_type": "execute_request",
+                 "date": "2019-03-25T08:46:21.949823Z"
+             },
+             "metadata": {},
+             "content": {
+                 "name": "stdout",
+                 "text": "Hello gateway\n"
+             },
+             "buffers": [],
+             "channel": "iopub"
+         }
+         */
         try {
             JsonNode msg = mapper.readTree(s);
             String type = msg.path("msg_type").asText();
             if (type.equalsIgnoreCase("error")) {
                 if (logger != null) {
                     logger.println("Error: web socket occurs an error " + s);
+                    streamLatch.countDown();
                 }
             } else if (type.equalsIgnoreCase("stream")) {
                 if (messageID.equalsIgnoreCase(msg.path("parent_header").path("msg_id").asText())) {
@@ -120,9 +148,6 @@ public class WSClient extends WebSocketClient {
         root.set("content", content);
         root.putNull("metadata");
         root.putNull("buffers");
-        if (logger != null) {
-            logger.println(root.toString());
-        }
         super.send(root.toString());
     }
 
