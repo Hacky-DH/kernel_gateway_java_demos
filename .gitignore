@@ -10,3 +10,4 @@ target
 *.log
 .DS_Store
 out/
+dependency-reduced-pom.xml
