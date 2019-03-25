@@ -1,0 +1,12 @@
+.coverage
+.settings
+.classpath
+.idea
+.metadata
+target
+*.class
+*.iml
+*.jar
+*.log
+.DS_Store
+out/
