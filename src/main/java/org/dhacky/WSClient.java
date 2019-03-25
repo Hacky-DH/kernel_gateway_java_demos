@@ -219,24 +219,24 @@ public class WSClient extends WebSocketClient {
             }
             return new WSClient(uri, logger);
         }
+    }
 
-        public static void main(String[] args) throws Exception {
-            WSClient c = null;
-            try {
-                c = new WSClient.WSClientBuilder()
-                        .withLogger(System.out)
-                        .withAddress(null)
-                        .withKernelName(null)
-                        .withKernelID(null)
-                        .build();
-                if (c.connectBlocking(1, TimeUnit.MINUTES)) {
-                    c.sendCode("print('Hello gateway')");
-                    c.await(5, TimeUnit.MINUTES);
-                }
-            } finally {
-                if (c != null)
-                    c.closeBlocking();
+    public static void main(String[] args) throws Exception {
+        WSClient c = null;
+        try {
+            c = new WSClient.WSClientBuilder()
+                    .withLogger(System.out)
+                    .withAddress(null)
+                    .withKernelName(null)
+                    .withKernelID(null)
+                    .build();
+            if (c.connectBlocking(1, TimeUnit.MINUTES)) {
+                c.sendCode("print('Hello gateway')");
+                c.await(5, TimeUnit.MINUTES);
             }
+        } finally {
+            if (c != null)
+                c.closeBlocking();
         }
     }
 }
